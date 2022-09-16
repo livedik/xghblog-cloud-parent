@@ -20,8 +20,9 @@
         <spring-boot.version>2.1.12.RELEASE</spring-boot.version>
         <spring-cloud.version>Greenwich.SR5</spring-cloud.version>
         <alibaba.cloud.version>2.1.2.RELEASE</alibaba.cloud.version>
-
+        <swagger2.cloud.version>2.9.2</swagger2.cloud.version>
         <mybatis-plus.version>3.1.1</mybatis-plus.version>
+        <esayexcel.cloud.version>3.0.5</esayexcel.cloud.version>
 
     </properties>
 
@@ -71,6 +72,31 @@
             </resource>
         </resources>
     </build>
+
+    <!-- 环境 -->
+    <profiles>
+        <!-- 测试 -->
+        <profile>
+            <id>test</id>
+
+            <properties>
+                <!--当前环境-->
+                <profile.name>test</profile.name>
+                <!--Nacos配置中心地址-->
+                <config.server-addr>43.138.253.95:8848</config.server-addr>
+                <!--                <config.server-addr>172.21.39.124:8848</config.server-addr>-->
+                <!--                <config.server-addr>192.168.30.94:8848</config.server-addr>-->
+                <!--                <discovery.server-addr>192.168.30.94:8848</discovery.server-addr>-->
+                <!--<config.server-addr>10.252.187.228:8848</config.server-addr>-->
+                <!--Nacos配置中心命名空间,用于支持多环境.这里必须使用ID，不能使用名称,默认为空-->
+                <config.namespace>3004ba33-28f1-49fd-97aa-b6a6a4d22084</config.namespace>
+                <!--Nacos服务发现地址-->
+                <!--                <discovery.server-addr>192.168.30.94:8848</discovery.server-addr>-->
+                <discovery.server-addr>43.138.253.95:8848</discovery.server-addr>
+                <!--                <discovery.server-addr>172.21.39.124:8848</discovery.server-addr>-->
+            </properties>
+        </profile>
+    </profiles>
 
 
 </project>

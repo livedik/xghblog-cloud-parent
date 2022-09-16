@@ -16,6 +16,8 @@
         <module>xghblog-cloud-api-spring-server</module>
         <module>xghblog-cloud-uaa-admin</module>
         <module>xghblog-cloud-generator-server</module>
+        <module>xhgblog-cloud-base-client</module>
+        <module>xghblog-cloud-base-server</module>
     </modules>
 
     <properties>
