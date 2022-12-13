@@ -1,0 +1,27 @@
+# nacos配置
+server:
+  port: 8888
+
+spring:
+  application:
+    name: nacos-config-client
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 43.138.253.95:8848 #Nacos服务注册中心地址
+        namespace: 3004ba33-28f1-49fd-97aa-b6a6a4d22084
+      config:
+        server-addr: 43.138.253.95:8848 #Nacos作为配置中心地址
+        file-extension: yaml #指定yaml格式的配置
+        group: DEFAULT_GROUP
+        namespace: 3004ba33-28f1-49fd-97aa-b6a6a4d22084
+        shared-configs:
+          - data-id: db.properties
+          - data-id: rabbitmq.properties
+    gateway:
+      discovery:
+        locator:
+          #表明gateway开启服务注册和发现的功能，并且spring cloud gateway自动根据服务发现为每一个服务创建了一个router，# 这个router将以服务名开头的请求路径转发到对应的服务
+          enabled: false
+          #将请求路径上的服务名配置为小写（因为服务注册的时候，向注册中心注册时将服务名转成大写的了,比如以/service-hi/*的请求路径被路由转发到服务名为service-hi的服务上
+          lowerCaseServiceId: true

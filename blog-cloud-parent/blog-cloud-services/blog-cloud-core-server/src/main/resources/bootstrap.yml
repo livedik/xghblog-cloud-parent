@@ -1,0 +1,19 @@
+server:
+  port: 6180
+spring:
+  application:
+    name: ${artifactId}
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 43.138.253.95:8848
+        namespace: 3004ba33-28f1-49fd-97aa-b6a6a4d22084
+      config:
+        server-addr: 43.138.253.95:8848
+        namespace: 3004ba33-28f1-49fd-97aa-b6a6a4d22084
+        shared-configs:
+          - data-id: db.properties
+          - data-id: rabbitmq.properties
+
+
+

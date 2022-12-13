@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.base.server.mapper.BaseRoleMapper">
+
+
+    <select id="selectRoleGroups" resultType="com.blog.base.client.model.entity.RoleGroup">
+        select id,role_name as label,role_code from base_role where p_id = '0'
+    </select>
+
+    <select id="selectRoleForGroup" resultType="com.blog.base.client.model.entity.Role">
+        select id,role_name as label,role_code from base_role where p_id = #{pid}
+    </select>
+
+    <select id="getUserIdByRoleId" resultType="java.lang.String">
+        select user_id from base_account_role where role_id = #{roleId}
+    </select>
+
+    <select id="getRoleIdForPid" resultType="java.lang.String">
+        select id from base_role where p_id = #{pid}
+    </select>
+    <select id="getUserIdByRoleIds" resultType="java.lang.String">
+        select user_id
+        from base_account_role
+        where role_id
+                  in
+                    <foreach collection="list" item="roleId" separator="," open="(" close=")">
+                            #{roleId}
+                    </foreach>
+    </select>
+</mapper>

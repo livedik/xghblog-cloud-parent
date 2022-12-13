@@ -1,0 +1,23 @@
+server:
+  port: 8255
+spring:
+  profiles:
+    active: ${profile.name}
+  application:
+    name: ${artifactId}
+  cloud:
+    nacos:
+      config:
+        server-addr: ${config.server-addr}
+        namespace: ${config.namespace}
+        shared-configs:
+          - data-id: db.properties
+          - data-id: rabbitmq.properties
+      discovery:
+        server-addr: ${config.server-addr}
+        namespace: ${config.namespace}
+
+#mybatis plus 设置
+mybatis-plus:
+  #实体扫描，多个package用逗号或者分号分隔
+  mapper-locations: classpath:mapper/*.xml

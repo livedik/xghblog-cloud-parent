@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.bpm.server.mapper.ActReProcdefMapper">
+
+    <select id="selectNewPro" resultType="com.blog.bpm.client.model.vo.ProcdefDto">
+        select arp.KEY_ as proKey,
+               arp.ID_ as procDefId,
+               arp.NAME_ as proName,
+               arp.VERSION_ as proVersion,
+               arp.SUSPENSION_STATE_ as proStatus,
+               count(art.PROC_DEF_ID_) as actCount,
+               ard.DEPLOY_TIME_ as deTime,
+               arp.DEPLOYMENT_ID_ as deId
+        from act_re_procdef arp
+                 LEFT JOIN act_ru_task art
+                           ON arp.ID_=art.PROC_DEF_ID_
+                 LEFT JOIN act_re_deployment ard
+                           ON arp.DEPLOYMENT_ID_=ard.ID_
+        WHERE (arp.KEY_,arp.VERSION_) in (select KEY_,MAX(VERSION_) from act_re_procdef GROUP BY KEY_)
+        group by arp.ID_
+    </select>
+    <select id="selectOldPro" resultType="com.blog.bpm.client.model.vo.ProcdefDto">
+        select arp.KEY_ as proKey,
+               arp.ID_ as proDeId,
+               arp.NAME_ as proName,
+               arp.VERSION_ as proVersion,
+               arp.SUSPENSION_STATE_ as proStatus,
+               count(art.PROC_DEF_ID_) as actCount,
+               ard.DEPLOY_TIME_ as deTime,
+               arp.DEPLOYMENT_ID_ as deId
+        from act_re_procdef arp
+                 LEFT JOIN act_ru_task art
+                           ON arp.ID_=art.PROC_DEF_ID_
+                 LEFT JOIN act_re_deployment ard
+                           ON arp.DEPLOYMENT_ID_=ard.ID_
+        WHERE (arp.KEY_,arp.VERSION_) not in (select KEY_,MAX(VERSION_) from act_re_procdef GROUP BY KEY_)
+        group by arp.ID_
+    </select>
+
+    <select id="getActProcessQuery" resultType="com.blog.bpm.client.model.entity.ProcessInst"
+            parameterType="com.blog.bpm.client.model.vo.bpmDetailQueryVo">
+        select art.EXECUTION_ID_ as executionId,
+               art.PROC_INST_ID_ as procInstId,
+               art.PROC_DEF_ID_ as procDefId,
+               art.NAME_ as proName,
+               art.DESCRIPTION_ as description,
+               art.ASSIGNEE_ as assignee,
+               art.CREATE_TIME_ as nodeStrTime,
+               art.SUSPENSION_STATE_ as proStatus,
+               aha.ASSIGNEE_ as createName,
+               aha.START_TIME_ as strTime
+        from act_ru_task art
+            LEFT JOIN act_hi_actinst aha
+                on art.PROC_INST_ID_=aha.PROC_INST_ID_
+        where aha.ACT_TYPE_='startEvent'
+        <if test="procDefId!=null and procDefId!=''">
+            and art.PROC_DEF_ID_=#{procDefId}
+        </if>
+    </select>
+    <select id="getActProcessBydefId" resultType="com.blog.bpm.client.model.entity.ProcessInst" parameterType="String">
+        select art.EXECUTION_ID_ as executionId,
+               art.PROC_INST_ID_ as procInstId,
+               art.PROC_DEF_ID_ as procDefId,
+               art.NAME_ as proName,
+               art.DESCRIPTION_ as description,
+               art.ASSIGNEE_ as assignee,
+               art.CREATE_TIME_ as nodeStrTime,
+               art.SUSPENSION_STATE_ as proStatus,
+               aha.ASSIGNEE_ as createName,
+               aha.START_TIME_ as strTime
+        from act_ru_task art
+                 LEFT JOIN act_hi_actinst aha
+                           on art.PROC_INST_ID_=aha.PROC_INST_ID_
+        where aha.ACT_TYPE_='startEvent'
+          and art.PROC_DEF_ID_=#{procDefId}
+    </select>
+    <select id="getProcessByInsId" resultType="com.blog.bpm.client.model.entity.Process">
+        SELECT PROC_DEF_ID_ AS procDefId,
+               aha.PROC_INST_ID_ as procInstId,
+               aha.ACT_NAME_ as nodeName,
+               aha.ASSIGNEE_ as assignee,
+               aha.ACT_TYPE_ as nodeType,
+               aha.START_TIME_ as strTime,
+               aha.END_TIME_ as endTime,
+               ahc.message_ as message
+        FROM act_hi_actinst aha LEFT JOIN act_hi_comment ahc
+               on aha.TASK_ID_=ahc.task_id_
+        where aha.PROC_INST_ID_= #{ProcInstId}
+        order by START_TIME_
+    </select>
+
+    <select id="getOfMyTask" resultType="com.blog.bpm.client.model.entity.MyTask">
+        SELECT art.ID_ as taskId,
+               aht.ASSIGNEE_ as createName,
+               art.CREATE_TIME_ as nodeTime,
+               art.PROC_DEF_ID_ as procDefId,
+               aht.PROC_INST_ID_,
+               arf.NAME_ as taskName
+        FROM act_ru_task art LEFT JOIN act_hi_taskinst aht
+            ON art.PROC_INST_ID_=aht.PROC_INST_ID_
+            LEFT JOIN act_re_procdef arf
+                ON art.PROC_DEF_ID_=arf.ID_
+        WHERE art.ASSIGNEE_= #{username}
+        GROUP BY aht.PROC_INST_ID_
+    </select>
+
+
+</mapper>

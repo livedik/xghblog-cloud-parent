@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.base.server.mapper.BaseAuthorityMapper">
+
+    <select id="getAllAuthority" resultType="com.blog.common.security.OpenAuthority">
+        select authority_id
+        from base_authority
+        where status='1'
+    </select>
+</mapper>
