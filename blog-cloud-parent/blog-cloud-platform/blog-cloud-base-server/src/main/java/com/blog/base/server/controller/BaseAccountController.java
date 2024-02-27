@@ -114,6 +114,19 @@ public class BaseAccountController{
         return ResultBody.ok().data(baseAccount);
     }
 
+    /***
+     * 用户登录校验
+     * @param username  用户名
+     * @return
+     */
+    @ApiOperation(value = "用户校验",notes = "用户校验")
+    @PostMapping("/userLoginDemo")
+    public ResultBody<BaseAccount> userLoginDemo(@RequestParam String username)
+    {
+        BaseAccount baseAccount = baseAccountService.userLogin(username);
+        return ResultBody.ok().data(baseAccount);
+    }
+
 
 
 
